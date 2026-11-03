@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +8,9 @@
 <title>888 — Welcome</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+
+html { background: #090000; }
 
 body {
   margin: 0;
@@ -21,31 +22,70 @@ body {
   overflow-x: hidden;
 }
 
+/* Red smoke */
 body::before {
   content: "";
   position: fixed;
   inset: -30%;
   background:
-    radial-gradient(circle at 30% 35%,
-      rgba(255,0,0,.23), transparent 35%),
+    radial-gradient(circle at 25% 35%,
+      rgba(255,0,0,.24), transparent 35%),
     radial-gradient(circle at 75% 70%,
-      rgba(180,0,0,.25), transparent 40%);
-  animation: smoke 8s ease-in-out infinite alternate;
+      rgba(170,0,0,.25), transparent 40%);
+  animation: smoke 9s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 @keyframes smoke {
-  from { transform: scale(1); }
-  to { transform: scale(1.25); }
+  from { transform: scale(1); opacity: .6; }
+  to { transform: scale(1.3); opacity: 1; }
 }
 
+/* Floating red eights */
+.eights-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.eights-background span {
+  position: absolute;
+  bottom: -40px;
+  font-weight: 800;
+  text-shadow:
+    0 0 8px rgba(255,0,0,.8),
+    0 0 18px rgba(200,0,0,.5);
+  animation: riseEight linear infinite;
+  will-change: transform;
+}
+
+@keyframes riseEight {
+  0% {
+    transform: translate3d(0,0,0) rotate(-15deg);
+    opacity: 0;
+  }
+  12% { opacity: .55; }
+  85% { opacity: .45; }
+  100% {
+    transform:
+      translate3d(var(--drift),-115vh,0)
+      rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Main content */
 main {
   position: relative;
+  z-index: 1;
   max-width: 450px;
   margin: auto;
   padding: 65px 25px;
 }
 
+/* Logo */
 .logo {
   width: 220px;
   height: 220px;
@@ -53,6 +93,7 @@ main {
   border: 3px solid #ff2020;
   border-radius: 50%;
   overflow: hidden;
+  background: #120000;
   box-shadow: 0 0 35px #ff000080;
   animation: glow 3s infinite alternate;
   display: flex;
@@ -64,6 +105,7 @@ main {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 @keyframes glow {
@@ -96,29 +138,38 @@ h1 {
   font-weight: bold;
   letter-spacing: 2px;
   box-shadow: 0 0 18px #ff000040;
+  transition: .3s;
 }
 
-.button:active {
+.button:hover {
   background: #a00000;
+  box-shadow: 0 0 25px #ff0000;
 }
 
-.primary {
-  background: #b80000;
-}
+.primary { background: #b80000; }
 
 footer {
   margin-top: 55px;
   color: #888;
   font-size: 12px;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+  }
+}
 </style>
 </head>
 
 <body>
+
+<div class="eights-background" id="eights"></div>
+
 <main>
 
   <div class="logo">
-    <img src="./IMG_3084.png". alt="888 Logo">
+    <img src="./IMG_3084.png" alt="888 Logo">
   </div>
 
   <h1>888</h1>
@@ -141,5 +192,37 @@ footer {
   <footer>© 888 — Official Website</footer>
 
 </main>
+
+<script>
+const background = document.getElementById("eights");
+
+for (let i = 0; i < 130; i++) {
+  const eight = document.createElement("span");
+
+  eight.textContent = "8";
+  eight.style.left = Math.random() * 100 + "%";
+  eight.style.fontSize =
+    (9 + Math.random() * 15) + "px";
+
+  eight.style.color =
+    ["#ff2020", "#ff4545", "#a80000", "#ff7777"][
+      Math.floor(Math.random() * 4)
+    ];
+
+  eight.style.setProperty(
+    "--drift",
+    (Math.random() * 140 - 70) + "px"
+  );
+
+  eight.style.animationDuration =
+    (9 + Math.random() * 15) + "s";
+
+  eight.style.animationDelay =
+    (-Math.random() * 24) + "s";
+
+  background.appendChild(eight);
+}
+</script>
+
 </body>
 </html>
